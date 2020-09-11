@@ -3,7 +3,10 @@
   "version": "1.0.0",
   "private": true,
   "description": "This is a form of customer creation. For the MEDODS company.",
-  "dependencies": {},
+  "dependencies": {
+    "vue": "^2.6.12",
+    "vuelidate": "^0.7.5"
+  },
   "devDependencies": {
     "browser-sync": "^2.26.12",
     "del": "^5.1.0",
@@ -17,7 +20,7 @@
     "readable-stream": "^3.6.0"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "gulp start"
   },
   "repository": {
     "type": "git",
