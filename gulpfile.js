@@ -31,10 +31,10 @@ ___________________________________________________________________________
 // *** JS-files handling ***
 gulp.task('scripts', () => {
 	return pipeline(
-		gulp.src('source/js_modules/**/*.js'),
+		gulp.src('source/js/modules/**/*.js'),
     uglify(),
     concat('scripts.min.js'),
-    gulp.dest('source')
+    gulp.dest('source/js')
 	);
 });
 
@@ -49,7 +49,7 @@ gulp.task('server', () => {
     ui: false
   });
 
-  gulp.watch('source/js_modules/**/*.js', gulp.series('scripts', 'refresh'));
+  gulp.watch('source/js/**/*.js', gulp.series('scripts', 'refresh'));
   gulp.watch('*.html', gulp.series('refresh'));
 });
 
