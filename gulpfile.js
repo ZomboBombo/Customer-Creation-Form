@@ -10,11 +10,15 @@ var del = require('del');
 var sass = require('gulp-sass');
 var plumber = require('gulp-plumber');
 
-
 // --- JS-utilities ---
 var concat = require('gulp-concat');
 var uglify = require('gulp-uglify');
 var pipeline = require('readable-stream').pipeline;
+
+// --- Vue-utilities ---
+var browserify = require('gulp-browserify');
+var vueify = require('vueify');
+var vueildate = require('vuelidate');
 
 // --- Server utitlities ---
 var server = require('browser-sync').create();
@@ -28,14 +32,28 @@ ___________________________________________________________________________
 
 */
 
-// *** JS-files handling ***
-gulp.task('scripts', () => {
-	return pipeline(
-		gulp.src('source/js/modules/**/*.js'),
-    uglify(),
-    concat('scripts.min.js'),
-    gulp.dest('source/js')
-	);
+
+// *** Vue-syntax compilation and JS-files minification ***
+gulp.task('bundle', () => {
+  return gulp.src('./source/components/app.js')
+    .pipe(browserify({
+      transform: ['vueify']
+    }))
+    .pipe(rename('bundle.js'))
+    .pipe(gulp.dest('source/js/modules'));
+});
+
+gulp.task('minification', () => {
+  return gulp.src('source/js/modules/**/*.js')
+    .pipe(uglify())
+    .pipe(concat('scripts.min.js'))
+    .pipe(gulp.dest('source/js'));
+});
+
+
+// *** Removing tasks ***
+gulp.task('delscript', () => {
+  return del('source/scripts.min.js');
 });
 
 
@@ -49,7 +67,8 @@ gulp.task('server', () => {
     ui: false
   });
 
-  gulp.watch('source/js/**/*.js', gulp.series('scripts', 'refresh'));
+  gulp.watch('source/components/**/*.{vue,js}', gulp.series('bundle', 'delscript', 'minification', 'refresh'));
+  gulp.watch('source/js/modules/**/*.js', gulp.series('delscript', 'minification', 'refresh'));
   gulp.watch('*.html', gulp.series('refresh'));
 });
 
@@ -60,4 +79,4 @@ gulp.task('refresh', done => {
 
 
 // *** Main tasks ***
-gulp.task('start', gulp.series('server'));
+gulp.task('start', gulp.series('delscript', 'minification', 'server'));
