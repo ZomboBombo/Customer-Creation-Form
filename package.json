@@ -9,15 +9,18 @@
   },
   "devDependencies": {
     "browser-sync": "^2.26.12",
+    "browserify": "^16.5.2",
     "del": "^5.1.0",
     "gulp": "^4.0.2",
+    "gulp-browserify": "^0.5.1",
     "gulp-concat": "^2.6.1",
     "gulp-plumber": "^1.2.1",
     "gulp-rename": "^2.0.0",
     "gulp-sass": "^4.1.0",
     "gulp-uglify": "^3.0.2",
     "gulp-vueify2": "0.0.3",
-    "readable-stream": "^3.6.0"
+    "readable-stream": "^3.6.0",
+    "vueify": "^9.4.1"
   },
   "scripts": {
     "start": "gulp start"
