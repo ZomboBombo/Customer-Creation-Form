@@ -12,13 +12,13 @@ var plumber = require('gulp-plumber');
 
 // --- JS-utilities ---
 var concat = require('gulp-concat');
-var uglify = require('gulp-uglify');
+var terser = require('gulp-terser');
 var pipeline = require('readable-stream').pipeline;
+var babelify = require('babelify').configure({ presets: ['@babel/preset-env'] });
 
 // --- Vue-utilities ---
 var browserify = require('gulp-browserify');
 var vueify = require('vueify');
-var vueildate = require('vuelidate');
 
 // --- Server utitlities ---
 var server = require('browser-sync').create();
@@ -37,7 +37,10 @@ ___________________________________________________________________________
 gulp.task('bundle', () => {
   return gulp.src('./source/components/app.js')
     .pipe(browserify({
-      transform: ['vueify']
+      transform: [
+        babelify,
+        vueify
+      ]
     }))
     .pipe(rename('bundle.js'))
     .pipe(gulp.dest('source/js/modules'));
@@ -45,7 +48,7 @@ gulp.task('bundle', () => {
 
 gulp.task('minification', () => {
   return gulp.src('source/js/modules/**/*.js')
-    .pipe(uglify())
+    .pipe(terser())
     .pipe(concat('scripts.min.js'))
     .pipe(gulp.dest('source/js'));
 });
