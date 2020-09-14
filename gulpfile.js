@@ -63,7 +63,7 @@ gulp.task('delscript', () => {
 // *** Raising the server ***
 gulp.task('server', () => {
   server.init({
-    server: '',
+    server: 'source',
     notify: false,
     open: true,
     cors: true,
