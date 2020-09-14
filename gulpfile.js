@@ -6,9 +6,20 @@ var gulp = require('gulp');
 var rename = require('gulp-rename');
 var del = require('del');
 
+// --- HTML-utilities ---
+var posthtml = require("gulp-posthtml");
+var include = require("posthtml-include");
+var htmlmin = require("gulp-htmlmin");
+
 // --- Preprocessor utilities ---
 var sass = require('gulp-sass');
 var plumber = require('gulp-plumber');
+var sourcemap = require("gulp-sourcemaps");
+
+// --- CSS-utilities ---
+var postcss = require("gulp-postcss");
+var autoprefixer = require("autoprefixer");
+var csso = require("gulp-csso");
 
 // --- JS-utilities ---
 var concat = require('gulp-concat');
@@ -32,6 +43,21 @@ ___________________________________________________________________________
 
 */
 
+// *** Sass- and CSS-files handling ***
+gulp.task('css', () => {
+  return gulp.src('source/sass/styles.scss')
+    .pipe(plumber())
+    .pipe(sourcemap.init())
+    .pipe(sass())
+    .pipe(postcss([
+      autoprefixer()
+    ]))
+    .pipe(csso())
+    .pipe(sourcemap.write('.'))
+    .pipe(gulp.dest('docs/css'))
+    .pipe(server.stream());
+});
+
 
 // *** Vue-syntax compilation and JS-files minification ***
 gulp.task('bundle', () => {
@@ -46,33 +72,48 @@ gulp.task('bundle', () => {
     .pipe(gulp.dest('source/js/modules'));
 });
 
-gulp.task('minification', () => {
+gulp.task('scripts', () => {
   return gulp.src('source/js/modules/**/*.js')
     .pipe(terser())
     .pipe(concat('scripts.min.js'))
-    .pipe(gulp.dest('source/js'));
+    .pipe(gulp.dest('docs'));
 });
 
 
-// *** Removing tasks ***
-gulp.task('delscript', () => {
-  return del('source/scripts.min.js');
+// *** HTML-files handling: minification and relocation ***
+gulp.task('html', () => {
+  return gulp.src('source/*.html')
+    .pipe(posthtml([
+      include()
+    ]))
+    .pipe(htmlmin({
+      collapseWhitespace: true,
+      removeComments: true
+    }))
+    .pipe(gulp.dest('docs'));
+});
+
+
+// *** Task for removing folder with final assembly ***
+gulp.task('clean', () => {
+  return del('docs');
 });
 
 
 // *** Raising the server ***
 gulp.task('server', () => {
   server.init({
-    server: 'source',
+    server: 'docs',
     notify: false,
     open: true,
     cors: true,
     ui: false
   });
 
-  gulp.watch('source/components/**/*.{vue,js}', gulp.series('bundle', 'delscript', 'minification', 'refresh'));
-  gulp.watch('source/js/modules/**/*.js', gulp.series('delscript', 'minification', 'refresh'));
-  gulp.watch('*.html', gulp.series('refresh'));
+  gulp.watch("source/sass/**/*.{scss,sass}", gulp.series("css"));
+  gulp.watch('source/components/**/*.{vue,js}', gulp.series('bundle', 'clean', 'scripts', 'refresh'));
+  gulp.watch('source/js/modules/**/*.js', gulp.series('clean', 'scripts', 'refresh'));
+  gulp.watch('*.html', gulp.series('html', 'refresh'));
 });
 
 gulp.task('refresh', done => {
@@ -82,4 +123,11 @@ gulp.task('refresh', done => {
 
 
 // *** Main tasks ***
-gulp.task('start', gulp.series('delscript', 'minification', 'server'));
+gulp.task('build', gulp.series(
+  'clean',
+  'scripts',
+  'css',
+  'html'
+));
+
+gulp.task('start', gulp.series('build', 'server'));
