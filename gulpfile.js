@@ -43,6 +43,20 @@ ___________________________________________________________________________
 
 */
 
+// *** HTML-files handling: minification and relocation ***
+gulp.task('html', () => {
+  return gulp.src('source/*.html')
+    .pipe(posthtml([
+      include()
+    ]))
+    .pipe(htmlmin({
+      collapseWhitespace: true,
+      removeComments: true
+    }))
+    .pipe(gulp.dest('docs'));
+});
+
+
 // *** Sass- and CSS-files handling ***
 gulp.task('css', () => {
   return gulp.src('source/sass/styles.scss')
@@ -59,7 +73,16 @@ gulp.task('css', () => {
 });
 
 
-// *** Vue-syntax compilation and JS-files minification ***
+// *** Minification and concatenation JS-files ***
+gulp.task('scripts', () => {
+  return gulp.src('source/js/modules/**/*.js')
+    .pipe(terser())
+    .pipe(concat('scripts.min.js'))
+    .pipe(gulp.dest('docs'));
+});
+
+
+// *** Vue-syntax compilation ***
 gulp.task('bundle', () => {
   return gulp.src('./source/components/app.js')
     .pipe(browserify({
@@ -72,35 +95,8 @@ gulp.task('bundle', () => {
     .pipe(gulp.dest('source/js/modules'));
 });
 
-gulp.task('scripts', () => {
-  return gulp.src('source/js/modules/**/*.js')
-    .pipe(terser())
-    .pipe(concat('scripts.min.js'))
-    .pipe(gulp.dest('docs'));
-});
 
-
-// *** HTML-files handling: minification and relocation ***
-gulp.task('html', () => {
-  return gulp.src('source/*.html')
-    .pipe(posthtml([
-      include()
-    ]))
-    .pipe(htmlmin({
-      collapseWhitespace: true,
-      removeComments: true
-    }))
-    .pipe(gulp.dest('docs'));
-});
-
-
-// *** Task for removing folder with final assembly ***
-gulp.task('clean', () => {
-  return del('docs');
-});
-
-
-// *** Raising the server ***
+// *** Server tasks ***
 gulp.task('server', () => {
   server.init({
     server: 'docs',
@@ -119,6 +115,12 @@ gulp.task('server', () => {
 gulp.task('refresh', done => {
   server.reload();
   done();
+});
+
+
+// *** Task for removing folder with final assembly ***
+gulp.task('clean', () => {
+  return del('docs');
 });
 
 
