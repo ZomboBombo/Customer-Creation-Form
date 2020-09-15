@@ -84,7 +84,7 @@ gulp.task('scripts', () => {
 
 // *** Vue-syntax compilation ***
 gulp.task('bundle', () => {
-  return gulp.src('./source/components/app.js')
+  return gulp.src('./source/components/main.js')
     .pipe(browserify({
       transform: [
         babelify,
@@ -107,8 +107,8 @@ gulp.task('server', () => {
   });
 
   gulp.watch("source/sass/**/*.{scss,sass}", gulp.series("css"));
-  gulp.watch('source/components/**/*.{vue,js}', gulp.series('bundle', 'clean', 'scripts', 'refresh'));
-  gulp.watch('source/js/modules/**/*.js', gulp.series('clean', 'scripts', 'refresh'));
+  gulp.watch('source/components/**/*.{vue,js}', gulp.series('bundle', 'clean', 'scripts', 'css', 'html', 'refresh'));
+  gulp.watch('source/js/modules/**/*.js', gulp.series('clean', 'scripts', 'css', 'html', 'refresh'));
   gulp.watch('*.html', gulp.series('html', 'refresh'));
 });
 
@@ -128,6 +128,7 @@ gulp.task('clean', () => {
 gulp.task('build', gulp.series(
   'clean',
   'scripts',
+  'bundle',
   'css',
   'html'
 ));
