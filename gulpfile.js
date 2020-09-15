@@ -107,14 +107,25 @@ gulp.task('server', () => {
   });
 
   gulp.watch("source/sass/**/*.{scss,sass}", gulp.series("css"));
-  gulp.watch('source/components/**/*.{vue,js}', gulp.series('bundle', 'clean', 'scripts', 'css', 'html', 'refresh'));
-  gulp.watch('source/js/modules/**/*.js', gulp.series('clean', 'scripts', 'css', 'html', 'refresh'));
-  gulp.watch('*.html', gulp.series('html', 'refresh'));
+  gulp.watch('source/components/**/*.{vue,js}', gulp.series('bundle'));
+  gulp.watch('source/js/modules/**/*.js', gulp.series('scripts', 'refresh'));
+  gulp.watch('source/*.html', gulp.series('html', 'refresh'));
 });
 
 gulp.task('refresh', done => {
   server.reload();
   done();
+});
+
+
+// *** Copying files to the folder with final assembly ***
+gulp.task('copy', () => {
+  return gulp.src([
+    'source/fonts/**/*.{woff,woff2}'
+  ], {
+    base: 'source'
+  })
+  .pipe(gulp.dest('docs'));
 });
 
 
@@ -127,8 +138,9 @@ gulp.task('clean', () => {
 // *** Main tasks ***
 gulp.task('build', gulp.series(
   'clean',
-  'scripts',
+  'copy',
   'bundle',
+  'scripts',
   'css',
   'html'
 ));
