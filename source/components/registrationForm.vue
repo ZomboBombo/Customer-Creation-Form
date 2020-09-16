@@ -81,7 +81,7 @@
           <label class="list-of-data__label" for="doctor">Лечащий врач:</label>
           <select name="attending-doctor"
                   id="doctor"
-                  v-model="$v.availableDoctors.$model">
+                  v-model="$v.selectedDoctor.$model">
 
             <option v-for="doctor in availableDoctors" :value="doctor">{{ doctor }}</option>
           </select>
@@ -143,13 +143,13 @@
           <label class="list-of-data__label" for="document">Тип документа:</label>
           <select name="client-document"
                   id="document"
-                  :class="{invalid: ($v.availableDocuments.$dirty && !$v.availableDocuments.required)}"
-                  v-model="$v.availableDocuments.$model">
+                  :class="{invalid: ($v.selectedDocument.$dirty && !$v.selectedDocument.required)}"
+                  v-model="$v.selectedDocument.$model">
 
             <option v-for="identityDoc in availableDocuments" :value="identityDoc">{{ identityDoc }}</option>
           </select>
 
-          <span class="list-of-data__invalid-feedback" v-if="$v.availableDocuments.$dirty && !$v.availableDocuments.required">Выберите тип документа для регистрации.</span>
+          <span class="list-of-data__invalid-feedback" v-if="$v.selectedDocument.$dirty && !$v.selectedDocument.required">Выберите тип документа для регистрации.</span>
         </li>
         <li class="list-of-data__item">
           <label class="list-of-data__label" for="passportSeries">Серия:</label>
@@ -209,12 +209,14 @@
           'Проблемные',
           'ОМС'
         ],
+        selectedDoctor: null,
         availableDoctors: [
           'Иванов',
           'Захаров',
           'Чернышева'
         ],
         city: '',
+        selectedDocument: null,
         availableDocuments: [
           'Паспорт',
           'Свидетельство о рождении',
@@ -244,11 +246,12 @@
       сategories: { 
         required
       },
+      selectedDoctor: {},
       availableDoctors: {},
       city: { 
         required
       },
-      availableDocuments: { 
+      selectedDocument: { 
         required
       },
       dateOfIssue: { 
