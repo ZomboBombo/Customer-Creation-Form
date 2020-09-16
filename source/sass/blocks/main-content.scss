@@ -15,3 +15,37 @@
   line-height: 40px;
 	text-align: center;
 }
+
+
+/*
+_________________________________
+
+--------- MEDIA QUERIES ---------
+_________________________________
+
+*/
+
+// *** for "Mobile" width ***
+@media (min-width: $width--mobile) {
+  .main-content {
+    padding: 0;
+  }
+
+  .main-content__main-heading {
+    font-size: 25px;
+    line-height: 30px;
+  }
+}
+
+// *** for "Tablet" width ***
+@media (min-width: $width--tablet) {
+  .main-content {
+    padding-right: 20px;
+    padding-left: 20px;
+  }
+
+  .main-content__main-heading {
+    font-size: 30px;
+    line-height: 40px;
+  }
+}
