@@ -1,44 +1,76 @@
-.data-fieldset {
-  position: relative;
+/*
+_________________________________________________
 
-  width: auto;
-  min-height: 200px;
+--- MEDIA QUERIES for "Mobile" viewport width ---
+_________________________________________________
 
-  margin: 0;
+*/
+@media (min-width: $width--mobile) {
+  .data-fieldset {
+    position: relative;
 
-  background-color: $background--fieldset;
-	border: none;
+    width: 280px;
+    min-height: 200px;
+
+    margin: 0;
+
+    background-color: $background--fieldset;
+  	border: none;
 
 
-  // *** Mods of class ***
-  &--personal-data {
-    border-top-left-radius: 40px;
-    border-top-right-radius: 40px;   
+    // *** Mods of class ***
+    &--personal-data {
+      border-top-left-radius: 40px;
+      border-top-right-radius: 40px;   
+    }
+
+    &--address {
+      background-color: $background--main;
+    }
   }
 
-  &--address {
-    background-color: $background--main;
+  .data-fieldset__heading-wrapper {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+
+    width: 260px;
+
+    padding-bottom: 10px;
+
+    text-align: center;
+
+    border-bottom: 1px solid $black;
   }
+
+  .data-fieldset__heading {
+    position: relative;
+
+    width: 100%;
+
+    font-size: 30px;
+    line-height: 35px;
+  }
+
+
+  /* ---------------------- End of "Mobile" MEDIA QUERIES ---------------------- */
 }
 
-.data-fieldset__heading-wrapper {
-  position: absolute;
-  top: 20px;
-  left: 30px;
+/*
+_________________________________________________
 
-  width: 90%;
+--- MEDIA QUERIES for "Tablet" viewport width ---
+_________________________________________________
 
-  padding-bottom: 10px;
-  padding-right: 20px;
+*/
+@media (min-width: $width--tablet) {
+  .data-fieldset,
+  .data-fieldset__heading-wrapper,
+  .data-fieldset__heading {
+    width: auto;
+  }
 
-  border-bottom: 1px solid $black;
-}
 
-.data-fieldset__heading {
-  position: relative;
-
-  width: 300px;
-
-  font-size: 30px;
-  line-height: 35px;
+  /* ---------------------- End of "Tablet" MEDIA QUERIES ---------------------- */
 }
